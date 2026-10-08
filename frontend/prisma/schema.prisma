@@ -1,0 +1,60 @@
+// Prisma schema for Ganraj Logistics Service
+// learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  statusChanges StatusHistory[]
+}
+
+model Booking {
+  id              String   @id @default(cuid())
+  reference       String   @unique
+  // Customer
+  name            String
+  phone           String
+  email           String?
+  // Shipment
+  pickupLocation  String
+  deliveryLocation String
+  materialType    String
+  quantity        String
+  vehicleType     String
+  pickupDate      String
+  notes           String?
+  // Workflow
+  status          String   @default("New")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  history StatusHistory[]
+}
+
+model StatusHistory {
+  id         String   @id @default(cuid())
+  bookingId  String
+  fromStatus String?
+  toStatus   String
+  note       String?
+  adminId    String?
+  createdAt  DateTime @default(now())
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  admin   Admin?  @relation(fields: [adminId], references: [id], onDelete: SetNull)
+
+  @@index([bookingId])
+}

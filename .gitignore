@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+.pnp
+.pnp.*
+
+# Production & Build outputs
+.next/
+frontend/.next/
+out/
+build/
+dist/
+
+# Java / Maven build
+target/
+fleettracker-backend/target/
+*.class
+
+# Temporary & Lock files
+.DS_Store
+Thumbs.db
+*.log
+~$*
+.claude/
+.z-ai-config/
+
+# Local Environment files
+.env.local
+.env.*.local
