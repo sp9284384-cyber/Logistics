@@ -1,0 +1,16 @@
+## Copy this file to local.properties (Android Studio adds sdk.dir for you).
+## local.properties is git-ignored. Never commit real keys.
+
+# true  = offline demo mode, no backend needed (debug builds only)
+# false = talk to the real Spring Boot backend at API_BASE_URL
+DEMO_MODE=true
+
+# Debug builds. 10.0.2.2 is how the Android emulator reaches your computer's localhost.
+# On a real phone use your PC's LAN IP, e.g. http://192.168.1.20:8080/
+API_BASE_URL=http://10.0.2.2:8080/
+
+# Release builds (must be HTTPS)
+API_BASE_URL_RELEASE=https://api.yourdomain.com/
+
+# Google Maps SDK key (restrict it to package name + SHA-1 in Google Cloud)
+MAPS_API_KEY=

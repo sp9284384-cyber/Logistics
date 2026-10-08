@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">Ganraj Driver</string>
+    <string name="company_name">GANRAJ LOGISTICS SERVICE</string>
+    <string name="tagline">Reliable Transport. On Time. Every Time.</string>
+    <string name="moving_together">Moving Together, Growing Together</string>
+    <string name="title_login">Driver Login</string>
+    <string name="action_call_now">Call Now</string>
+    <string name="action_whatsapp">WhatsApp</string>
+    <!-- Support number from the company banner. Change here if it changes. -->
+    <string name="support_phone">8108767159</string>
+    <string name="whatsapp_default_message">Hello Ganraj Logistics Service, I need help with the driver app.</string>
+
+    <string name="login_email">Email</string>
+    <string name="login_password">Password</string>
+    <string name="login_button">LOGIN</string>
+    <string name="show">SHOW</string>
+    <string name="hide">HIDE</string>
+    <string name="demo_hint">Demo mode (no server). Use:\n%1$s\n%2$s</string>
+
+    <string name="title_orders">My Orders</string>
+    <string name="logout">Logout</string>
+    <string name="empty_orders">No orders assigned yet.\nPull down to refresh.</string>
+    <string name="retry">Retry</string>
+    <string name="back">Back</string>
+    <string name="loading_more">Loading more…</string>
+
+    <string name="title_order_detail">Order Details</string>
+    <string name="pickup">Pickup</string>
+    <string name="drop">Drop</string>
+    <string name="customer">Customer</string>
+    <string name="item">Item</string>
+    <string name="navigate">Navigate</string>
+    <string name="view_map">Map</string>
+    <string name="call_customer">Call</string>
+    <string name="title_map">Route Map</string>
+    <string name="allow_all_time">Allow \"all the time\"</string>
+    <string name="background_location_hint">Keep tracking working when the screen is off: set location access to \"Allow all the time\".</string>
+    <string name="location_permission_needed">Location permission is needed to share your live position.</string>
+
+    <string name="channel_orders">Order alerts</string>
+    <string name="channel_tracking">Live tracking</string>
+    <string name="tracking_title">Ganraj Driver</string>
+    <string name="tracking_text">Sharing your live location for the active order</string>
+    <string name="new_order_title">New order assigned</string>
+    <string name="new_order_text">Tap to view the order details</string>
+</resources>

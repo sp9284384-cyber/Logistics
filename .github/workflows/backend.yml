@@ -1,0 +1,59 @@
+name: Backend CI/CD
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "fleettracker-backend/**"
+      - ".github/workflows/backend.yml"
+
+jobs:
+  test-build-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      # ── 1. Checkout ──────────────────────────────────────────────
+      - uses: actions/checkout@v4
+
+      # ── 2. Java + Maven cache ────────────────────────────────────
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+
+      # ── 3. Unit tests ────────────────────────────────────────────
+      - name: Run tests
+        run: mvn -q -f fleettracker-backend/pom.xml test
+
+      # ── 4. Docker login (GHCR) ───────────────────────────────────
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # ── 5. Build and push image ──────────────────────────────────
+      - uses: docker/build-push-action@v6
+        with:
+          context: fleettracker-backend
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/fleet-backend:latest
+            ghcr.io/${{ github.repository_owner }}/fleet-backend:${{ github.sha }}
+
+      # ── 6. Deploy to EC2 ─────────────────────────────────────────
+      #   Secrets needed: EC2_HOST, EC2_SSH_KEY
+      - uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /opt/fleet
+            docker compose pull
+            docker compose up -d --remove-orphans
+            docker image prune -f
