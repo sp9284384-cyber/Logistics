@@ -1,0 +1,36 @@
+# Production Caddy Reverse Proxy
+# Automatic HTTPS for custom domain OR port 80 for IP address
+# Replace :80 with your domain (e.g. ganrajlogistics.in) when you attach a domain!
+
+:80 {
+    # Compress responses
+    encode gzip zstd
+
+    # Route backend API calls directly to FastAPI backend
+    handle /api/v1/* {
+        reverse_proxy backend:8000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
+    }
+
+    # Route backend documentation
+    handle /docs* {
+        reverse_proxy backend:8000
+    }
+    handle /openapi.json* {
+        reverse_proxy backend:8000
+    }
+
+    # Route all other web traffic to Next.js frontend
+    handle {
+        reverse_proxy frontend:3000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
+    }
+}

@@ -1,0 +1,64 @@
+services:
+  backend:
+    build:
+      context: ./backend/backend
+      dockerfile: Dockerfile
+    container_name: ganraj-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/backend/.env
+    environment:
+      - DATABASE_URL=sqlite:////app/data/ganraj.db
+      - ENV=production
+      - CORS_ORIGINS=*
+    volumes:
+      - backend_data:/app/data
+    ports:
+      - "8000:8000"
+    networks:
+      - ganraj-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - BACKEND_URL=http://backend:8000
+    container_name: ganraj-frontend
+    restart: unless-stopped
+    environment:
+      - BACKEND_URL=http://backend:8000
+      - NODE_ENV=production
+      - PORT=3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - ganraj-network
+
+  proxy:
+    image: caddy:2-alpine
+    container_name: ganraj-proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - ganraj-network
+
+volumes:
+  backend_data:
+  caddy_data:
+  caddy_config:
+
+networks:
+  ganraj-network:
+    driver: bridge
