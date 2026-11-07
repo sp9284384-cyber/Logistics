@@ -94,17 +94,28 @@ export default function DriverPage() {
   const autoIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const autoCountdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Restore session on mount
-  useEffect(() => {
-    const savedPhone = typeof window !== "undefined" ? localStorage.getItem("gls_driver_phone") : null;
-    if (savedPhone) {
-      setDriverPhone(savedPhone);
-      setPhoneInput(savedPhone);
-      loadSession(savedPhone);
+  const loadTripDetails = useCallback(async (ref: string) => {
+    setLoadingTrip(true);
+    try {
+      const res = await trackBooking(ref);
+      setActiveTrip(res);
+      if (res.currentLocation) {
+        setLocationText(res.currentLocation);
+      } else if (res.pickupLocation) {
+        setLocationText(`Loaded from Pickup: ${res.pickupLocation}`);
+      }
+    } catch (err) {
+      toast({
+        title: "Could not load trip details",
+        description: err instanceof ApiError ? err.message : "Network error",
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingTrip(false);
     }
-  }, []);
+  }, [toast]);
 
-  const loadSession = async (phone: string) => {
+  const loadSession = useCallback(async (phone: string) => {
     setLoggingIn(true);
     try {
       const res = await loginDriver(phone);
@@ -127,7 +138,17 @@ export default function DriverPage() {
     } finally {
       setLoggingIn(false);
     }
-  };
+  }, [loadTripDetails]);
+
+  // Restore session on mount
+  useEffect(() => {
+    const savedPhone = typeof window !== "undefined" ? localStorage.getItem("gls_driver_phone") : null;
+    if (savedPhone) {
+      setDriverPhone(savedPhone);
+      setPhoneInput(savedPhone);
+      loadSession(savedPhone);
+    }
+  }, [loadSession]);
 
   const handlePhoneLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -179,27 +200,6 @@ export default function DriverPage() {
     setActiveTrip(null);
     setPhoneInput("");
     setAvailableOrders([]);
-  };
-
-  const loadTripDetails = async (ref: string) => {
-    setLoadingTrip(true);
-    try {
-      const res = await trackBooking(ref);
-      setActiveTrip(res);
-      if (res.currentLocation) {
-        setLocationText(res.currentLocation);
-      } else if (res.pickupLocation) {
-        setLocationText(`Loaded from Pickup: ${res.pickupLocation}`);
-      }
-    } catch (err) {
-      toast({
-        title: "Could not load trip details",
-        description: err instanceof ApiError ? err.message : "Network error",
-        variant: "destructive",
-      });
-    } finally {
-      setLoadingTrip(false);
-    }
   };
 
   const fetchAvailableOrders = useCallback(async (phone?: string) => {
@@ -466,7 +466,6 @@ async function reverseGeocodeToPlaceName(lat: number, lng: number): Promise<stri
     } catch {
       // silently skip failed auto-checkpoints
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [driverPhone, activeTrip?.reference, activeTrip?.status]);
 
   // Start / stop the auto-checkpoint interval
