@@ -30,10 +30,12 @@ export const metadata: Metadata = {
   authors: [{ name: "Ganraj Logistics Service" }],
   icons: {
     icon: [
-      { url: "/logo.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico" },
+      { url: "/favicon.png", type: "image/png" },
+      { url: "/speedmark.png", type: "image/png" },
     ],
-    shortcut: "/logo.svg",
-    apple: "/logo.svg",
+    shortcut: "/favicon.ico",
+    apple: "/speedmark.png",
   },
   openGraph: {
     title: "Ganraj Logistics Service",
