@@ -142,14 +142,14 @@ export function SiteHeader({
             size="sm"
             variant="outline"
             className={cn(
-              "hidden sm:inline-flex",
+              "hidden sm:inline-flex font-semibold",
               scrolled
                 ? "border-navy/20 text-navy hover:bg-secondary"
                 : "border-white/30 bg-white/5 text-white hover:bg-white/10 hover:text-white"
             )}
           >
-            <a href={`tel:${COMPANY.phonePrimaryRaw}`}>
-              <Phone className="size-4 mr-1" /> Call
+            <a href={`tel:${COMPANY.helplineRaw}`}>
+              <Phone className="size-3.5 mr-1 text-brand" /> {COMPANY.helpline}
             </a>
           </Button>
           <Button
@@ -201,6 +201,16 @@ export function SiteHeader({
                 >
                   Book Now
                 </Button>
+                <div className="mt-2 flex flex-col gap-1.5 rounded-lg border border-white/10 bg-white/5 p-3 text-xs text-white/85">
+                  <span className="font-semibold text-brand">Helpline:</span>
+                  <a href={`tel:${COMPANY.helplineRaw}`} className="flex items-center gap-2 font-bold text-white hover:text-brand">
+                    <Phone className="size-3.5 text-brand" /> {COMPANY.helpline}
+                  </a>
+                  <span className="mt-1 font-semibold text-brand">Dispatch:</span>
+                  <a href={`tel:${COMPANY.phonePrimaryRaw}`} className="flex items-center gap-2 text-white/90 hover:text-brand">
+                    <Phone className="size-3.5 text-brand" /> {COMPANY.phonePrimary}
+                  </a>
+                </div>
                 <Button
                   asChild
                   variant="outline"

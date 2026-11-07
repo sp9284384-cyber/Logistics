@@ -83,6 +83,67 @@ import { cn } from "@/lib/utils";
 
 export function AdminView({ onBackToSite }: { onBackToSite: () => void }) {
   const { admin, loading, login, logout } = useAdmin();
+  const { toast } = useToast();
+
+  // Inactivity Auto-Logout (15 minutes of idle time)
+  useEffect(() => {
+    if (!admin) return;
+
+    const INACTIVITY_MS = 15 * 60 * 1000; // 15 mins
+    let idleTimer: NodeJS.Timeout;
+
+    const triggerLogout = async () => {
+      await logout();
+      toast({
+        title: "Session Expired",
+        description: "You were automatically logged out due to inactivity for security.",
+        variant: "destructive",
+      });
+    };
+
+    const resetIdleTimer = () => {
+      clearTimeout(idleTimer);
+      try {
+        localStorage.setItem("gls_last_active", String(Date.now()));
+      } catch {}
+      idleTimer = setTimeout(triggerLogout, INACTIVITY_MS);
+    };
+
+    const checkBackgroundElapsed = () => {
+      try {
+        const last = parseInt(localStorage.getItem("gls_last_active") || "0", 10);
+        if (last && Date.now() - last > INACTIVITY_MS) {
+          triggerLogout();
+          return;
+        }
+      } catch {}
+      resetIdleTimer();
+    };
+
+    const activityEvents = [
+      "mousedown",
+      "mousemove",
+      "keydown",
+      "scroll",
+      "touchstart",
+      "click",
+    ];
+
+    activityEvents.forEach((ev) =>
+      window.addEventListener(ev, resetIdleTimer, { passive: true })
+    );
+    window.addEventListener("focus", checkBackgroundElapsed);
+
+    resetIdleTimer();
+
+    return () => {
+      clearTimeout(idleTimer);
+      activityEvents.forEach((ev) =>
+        window.removeEventListener(ev, resetIdleTimer)
+      );
+      window.removeEventListener("focus", checkBackgroundElapsed);
+    };
+  }, [admin, logout, toast]);
 
   if (loading) {
     return (
@@ -110,7 +171,7 @@ function LoginView({
   onBackToSite: () => void;
 }) {
   const { toast } = useToast();
-  const [email, setEmail] = useState("admin@ganrajlogistics.in");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -156,13 +217,13 @@ function LoginView({
           <form onSubmit={onSubmit} className="mt-8 space-y-4">
             <div className="space-y-1.5">
               <Label className="flex items-center gap-1.5 text-sm font-medium text-navy">
-                <Mail className="size-3.5 text-brand" /> Email
+                <Mail className="size-3.5 text-brand" /> Email or Username
               </Label>
               <Input
-                type="email"
+                type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@ganrajlogistics.in"
+                placeholder="Enter admin email or username"
                 required
               />
             </div>
@@ -174,14 +235,14 @@ function LoginView({
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
+                placeholder="Enter password"
                 required
               />
             </div>
             <Button
               type="submit"
               disabled={submitting}
-              className="w-full bg-brand text-white hover:bg-brand-600"
+              className="w-full bg-brand text-white hover:bg-brand-600 font-semibold"
               size="lg"
             >
               {submitting ? (
@@ -194,15 +255,17 @@ function LoginView({
             </Button>
           </form>
 
-          <div className="mt-6 rounded-lg bg-secondary p-3 text-xs text-muted-foreground">
-            <p className="font-semibold text-navy">Demo credentials</p>
-            <p className="mt-0.5">admin@ganrajlogistics.in / ganraj@123</p>
-          </div>
-
           <button
             onClick={onBackToSite}
             className="mt-6 inline-flex w-full items-center justify-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-navy"
           >
+            <ArrowLeft className="size-4" /> Back to website
+          </button>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
             <ArrowLeft className="size-4" /> Back to website
           </button>
         </CardContent>

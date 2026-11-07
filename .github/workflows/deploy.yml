@@ -43,3 +43,4 @@ jobs:
             sudo docker image prune -f
 
             echo "✅ [CI/CD] Successfully deployed to https://www.ganrajlogistics.com!"
+

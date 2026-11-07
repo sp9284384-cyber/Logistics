@@ -56,9 +56,11 @@ export function SiteFooter({ onAdmin }: { onAdmin: () => void }) {
                 >
                   <Phone className="mt-0.5 size-4 shrink-0 text-brand" />
                   <span>
-                    {COMPANY.phonePrimary}
+                    <strong className="text-white">Helpline:</strong> {COMPANY.helpline}
                     <br />
-                    <span className="text-white/60">{COMPANY.phoneSecondary}</span>
+                    <strong className="text-white">Dispatch:</strong> {COMPANY.phonePrimary}
+                    <br />
+                    <span className="text-white/60">Support: {COMPANY.phoneSecondary}</span>
                   </span>
                 </a>
               </li>

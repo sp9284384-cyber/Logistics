@@ -48,13 +48,39 @@ def init_db_and_admin() -> None:
 
         db = SessionLocal()
         try:
-            if not get_admin_by_identifier(db, "admin@ganrajlogistics.in"):
-                create_admin(
-                    db,
-                    username="admin",
-                    email="admin@ganrajlogistics.in",
-                    password="ganraj@123",
-                )
+            from app.core.security import hash_password
+
+            # Primary production admin requested by owner
+            prod_email = "ganrajlogisticsservice@gmail.com"
+            prod_username = "ganrajlogisticsservice"
+            prod_pass = "Trilok@2018"
+
+            admin = get_admin_by_identifier(db, prod_email)
+            if not admin:
+                # Migrate old demo admin if present
+                old_admin = get_admin_by_identifier(db, "admin@ganrajlogistics.in")
+                if old_admin:
+                    old_admin.email = prod_email
+                    old_admin.username = prod_username
+                    old_admin.hashed_password = hash_password(prod_pass)
+                    db.commit()
+                else:
+                    create_admin(
+                        db,
+                        username=prod_username,
+                        email=prod_email,
+                        password=prod_pass,
+                    )
+            else:
+                # Ensure password matches Trilok@2018
+                admin.hashed_password = hash_password(prod_pass)
+                db.commit()
+
+            # Ensure old demo admin is removed if separate
+            old_demo = get_admin_by_identifier(db, "admin@ganrajlogistics.in")
+            if old_demo and old_demo.email != prod_email:
+                db.delete(old_demo)
+                db.commit()
         finally:
             db.close()
     except Exception as e:

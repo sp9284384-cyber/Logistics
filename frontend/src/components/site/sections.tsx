@@ -429,11 +429,14 @@ export function Contact({ onBookNow }: { onBookNow: () => void }) {
               <Phone className="size-6" />
             </div>
             <h3 className="mt-4 font-bold text-navy">Call / WhatsApp</h3>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {COMPANY.phonePrimary}
+            <p className="mt-1 text-sm font-bold text-brand">
+              Helpline: {COMPANY.helpline}
             </p>
-            <p className="text-sm font-semibold text-brand">
-              {COMPANY.phoneSecondary}
+            <p className="text-sm font-semibold text-navy">
+              Dispatch: {COMPANY.phonePrimary}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Alt: {COMPANY.phoneSecondary}
             </p>
           </a>
 
