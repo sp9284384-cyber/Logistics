@@ -1,0 +1,45 @@
+name: Auto Deploy to AWS EC2
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH on AWS EC2
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script_stop: true
+          script: |
+            echo "🚀 [CI/CD] Starting automated deployment..."
+            cd /home/ubuntu/Logistics
+
+            echo "📥 [CI/CD] Pulling latest changes from git..."
+            git checkout -- .
+            git pull origin main
+
+            echo "🔨 [CI/CD] Building updated containers..."
+            sudo docker compose build frontend backend
+
+            echo "⚡ [CI/CD] Restarting containers with zero downtime..."
+            sudo docker compose up -d
+
+            echo "🧹 [CI/CD] Pruning unused docker build cache..."
+            sudo docker image prune -f
+
+            echo "✅ [CI/CD] Successfully deployed to https://www.ganrajlogistics.com!"
