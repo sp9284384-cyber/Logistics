@@ -6,7 +6,11 @@ WORKDIR /app
 
 # Install dependencies
 COPY package.json package-lock.json* ./
+COPY prisma ./prisma/
 RUN npm ci --prefer-offline --no-audit
+
+# Generate Prisma Client
+RUN npx prisma generate
 
 # Copy source and build
 COPY . .
