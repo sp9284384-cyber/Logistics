@@ -29,7 +29,11 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Ganraj Logistics Service" }],
   icons: {
-    icon: "/logo.svg",
+    icon: [
+      { url: "/logo.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/logo.svg",
+    apple: "/logo.svg",
   },
   openGraph: {
     title: "Ganraj Logistics Service",
