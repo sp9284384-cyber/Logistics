@@ -208,3 +208,4 @@ Caddy will automatically provision a **free Let's Encrypt SSL certificate** and 
 | Restart all services | `docker compose restart` |
 | Stop all services | `docker compose down` |
 | Backup database | `docker cp ganraj-backend:/app/data/ganraj.db ./ganraj_backup.db` |
+

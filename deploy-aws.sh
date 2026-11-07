@@ -53,10 +53,17 @@ if [ -d ".git" ]; then
     git pull origin main || true
 fi
 
+# Determine docker command (with sudo fallback if group not reloaded in current session)
+if docker info &> /dev/null; then
+    DOCKER_CMD="docker"
+else
+    DOCKER_CMD="sudo docker"
+fi
+
 # 4. Build and start containers
 echo "🔨 Building and launching containers via Docker Compose..."
-docker compose pull || true
-docker compose up -d --build
+$DOCKER_CMD compose pull || true
+$DOCKER_CMD compose up -d --build
 
 # 5. Check health
 echo "⏳ Waiting for services to come online..."
@@ -66,7 +73,7 @@ echo ""
 echo "========================================================"
 echo "  🎉 GANRAJ LOGISTICS SERVICE IS LIVE ON AWS!"
 echo "========================================================"
-docker compose ps
+$DOCKER_CMD compose ps
 echo ""
 echo "Access your application:"
 PUBLIC_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4 2>/dev/null || curl -s ifconfig.me 2>/dev/null || echo "YOUR-SERVER-IP")
@@ -78,3 +85,4 @@ echo ""
 echo "💡 To bind your domain (e.g. ganrajlogistics.in) with free automatic SSL (HTTPS):"
 echo "   Edit 'Caddyfile', replace ':80' with 'yourdomain.com', and run 'docker compose restart proxy'."
 echo "========================================================"
+
