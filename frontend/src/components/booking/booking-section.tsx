@@ -93,6 +93,12 @@ export function BookingSection() {
     deliveryLocation: string;
     vehicleType: string;
     pickupDate: string;
+    totalAmount?: number | null;
+    driverName?: string | null;
+    driverPhone?: string | null;
+    vehicleNumber?: string | null;
+    currentLocation?: string | null;
+    lastLocationUpdate?: string | null;
     createdAt: string;
     history: { toStatus: string; note: string | null; createdAt: string }[];
   }>(null);
@@ -379,13 +385,13 @@ export function BookingSection() {
               <CardContent className="p-6">
                 <h3 className="text-lg font-bold">Track Your Booking</h3>
                 <p className="mt-1 text-sm text-white/70">
-                  Enter the reference you received after booking.
+                  Enter your Booking Reference or 10-digit Mobile Number.
                 </p>
                 <form onSubmit={onTrack} className="mt-4 flex gap-2">
                   <Input
                     value={trackRef}
                     onChange={(e) => setTrackRef(e.target.value)}
-                    placeholder="e.g. GLS241006-AB12"
+                    placeholder="e.g. GLS-1E284C or Mobile Number"
                     className="border-white/20 bg-white/10 text-white placeholder:text-white/40"
                   />
                   <Button
@@ -514,10 +520,67 @@ export function BookingSection() {
                 </span>
                 <StatusBadge status={trackResult.status} />
               </div>
+
+              {/* Total Quotation Amount if available */}
+              {trackResult.totalAmount && (
+                <div className="rounded-lg bg-emerald-50 border border-emerald-200 p-3 flex items-center justify-between text-xs">
+                  <div>
+                    <span className="text-emerald-800 font-semibold block">Official Quoted Freight:</span>
+                    <span className="text-base font-extrabold text-emerald-700 font-mono">
+                      ₹{trackResult.totalAmount.toLocaleString("en-IN")}
+                    </span>
+                  </div>
+                  <span className="text-[11px] font-semibold text-emerald-800 bg-white px-2 py-1 rounded border border-emerald-300">
+                    Verified by Dispatcher
+                  </span>
+                </div>
+              )}
+
+              {/* Assigned Vehicle & Driver if available */}
+              {(trackResult.driverName || trackResult.vehicleNumber) && (
+                <div className="rounded-lg bg-navy/5 border border-navy/15 p-3 text-xs space-y-1">
+                  <span className="text-navy font-bold block uppercase tracking-wider text-[10px]">
+                    Assigned Fleet & Driver
+                  </span>
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-navy">
+                    <span>
+                      Driver: <strong>{trackResult.driverName || "Assigned"}</strong>
+                    </span>
+                    <span>
+                      Vehicle: <strong className="font-mono">{trackResult.vehicleNumber || "Assigned"}</strong>
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Live Location Checkpoint */}
+              <div className="rounded-lg bg-slate-900 text-white p-3.5 text-xs space-y-1.5 shadow-inner">
+                <div className="flex items-center justify-between">
+                  <span className="text-brand font-bold uppercase tracking-wider text-[10px] block">
+                    📍 Live Shipment Checkpoint
+                  </span>
+                  {trackResult.lastLocationUpdate ? (
+                    <span className="text-[10px] text-white/60">
+                      Updated: {new Date(trackResult.lastLocationUpdate).toLocaleString("en-IN")}
+                    </span>
+                  ) : (
+                    <span className="text-[10px] text-emerald-400 font-medium">
+                      {trackResult.status}
+                    </span>
+                  )}
+                </div>
+                <p className="text-sm font-semibold text-white">
+                  {trackResult.currentLocation ||
+                    (trackResult.status === "In Transit"
+                      ? `Loaded from Pickup: ${trackResult.pickupLocation}`
+                      : `Scheduled at Pickup: ${trackResult.pickupLocation}`)}
+                </p>
+              </div>
+
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <Info label="Pickup" value={trackResult.pickupLocation} />
                 <Info label="Delivery" value={trackResult.deliveryLocation} />
-                <Info label="Vehicle" value={trackResult.vehicleType} />
+                <Info label="Vehicle Type" value={trackResult.vehicleType} />
                 <Info label="Pickup Date" value={trackResult.pickupDate} />
               </div>
               <div>

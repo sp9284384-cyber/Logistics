@@ -110,7 +110,37 @@ export function SiteHeader({
           <Button
             asChild
             size="sm"
-            variant={scrolled ? "outline" : "outline"}
+            variant="outline"
+            className={cn(
+              "hidden md:inline-flex",
+              scrolled
+                ? "border-navy/20 text-navy hover:bg-secondary"
+                : "border-white/30 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+            )}
+          >
+            <a href="/driver">
+              <Truck className="size-3.5 mr-1" /> Driver
+            </a>
+          </Button>
+
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={onAdmin}
+            className={cn(
+              "hidden sm:inline-flex",
+              scrolled
+                ? "border-navy/20 text-navy hover:bg-secondary"
+                : "border-white/30 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+            )}
+          >
+            Admin
+          </Button>
+
+          <Button
+            asChild
+            size="sm"
+            variant="outline"
             className={cn(
               "hidden sm:inline-flex",
               scrolled
@@ -119,7 +149,7 @@ export function SiteHeader({
             )}
           >
             <a href={`tel:${COMPANY.phonePrimaryRaw}`}>
-              <Phone className="size-4" /> Call
+              <Phone className="size-4 mr-1" /> Call
             </a>
           </Button>
           <Button
@@ -180,15 +210,25 @@ export function SiteHeader({
                     <MessageCircle className="size-4" /> WhatsApp Us
                   </a>
                 </Button>
-                <button
+                <Button
+                  asChild
+                  variant="outline"
+                  className="mt-2 border-white/30 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+                >
+                  <a href="/driver">
+                    <Truck className="size-4 mr-2" /> Driver Portal
+                  </a>
+                </Button>
+                <Button
+                  variant="outline"
                   onClick={() => {
                     setOpen(false);
                     onAdmin();
                   }}
-                  className="mt-4 rounded-md px-3 py-2 text-left text-xs text-white/50 transition-colors hover:text-white/80"
+                  className="mt-2 border-white/30 bg-white/5 text-white hover:bg-white/10 hover:text-white"
                 >
-                  Admin Login
-                </button>
+                  Admin Panel
+                </Button>
               </div>
             </SheetContent>
           </Sheet>

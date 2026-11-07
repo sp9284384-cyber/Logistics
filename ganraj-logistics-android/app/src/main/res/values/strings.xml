@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ganraj Logistics Service</string>
+    <string name="tagline">Reliable Transport. On Time. Every Time.</string>
+    <string name="hero_title">GANRAJ LOGISTICS SERVICE</string>
+    <string name="hero_subtitle">Reliable Transport \u0026 Logistics Solutions Across India</string>
+    <string name="call_now">Call Now</string>
+    <string name="whatsapp_us">WhatsApp Us</string>
+    <string name="request_quote">Request a Quote</string>
+    <string name="services">Our Services</string>
+    <string name="why_choose_us">Why Choose Us</string>
+    <string name="how_it_works">How It Works</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="about_us">About Us</string>
+    <string name="admin_login">Admin Login</string>
+    <string name="dashboard">Booking Requests</string>
+    <string name="booking_success_title">Booking Submitted</string>
+    <string name="error_network">Could not reach the server. Please check your internet and try again.</string>
+    <string name="error_rate_limit">Too many attempts. Please try again shortly.</string>
+</resources>

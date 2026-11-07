@@ -4,6 +4,7 @@ export const COMPANY = {
   name: "Ganraj Logistics Service",
   tagline: "Reliable Transport. On Time. Every Time.",
   subTagline: "Your Trusted Logistics Partner Across India",
+  phone: "8108767159",
   phonePrimary: "8108767159",
   phonePrimaryRaw: "8108767159",
   phoneSecondary: "99870 51430",

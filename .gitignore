@@ -25,5 +25,18 @@ Thumbs.db
 .z-ai-config/
 
 # Local Environment files
+.env
 .env.local
 .env.*.local
+*.env
+
+# Python
+venv/
+backend/venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+*.db
+*.sqlite3

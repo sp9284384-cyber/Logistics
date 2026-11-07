@@ -122,6 +122,12 @@ export function SiteFooter({ onAdmin }: { onAdmin: () => void }) {
             © {new Date().getFullYear()} {COMPANY.name}. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
+            <a
+              href="/driver"
+              className="text-xs text-white/40 transition-colors hover:text-white/70"
+            >
+              Driver Portal
+            </a>
             <button
               onClick={onAdmin}
               className="text-xs text-white/40 transition-colors hover:text-white/70"

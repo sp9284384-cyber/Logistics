@@ -40,7 +40,7 @@ export const bookingSchema = z.object({
     .min(1, "Enter the quantity")
     .max(60, "Quantity is too long"),
   vehicleType: z.enum(VEHICLE_TYPES as unknown as [string, ...string[]], {
-    errorMap: () => ({ message: "Select a vehicle type" }),
+    message: "Select a vehicle type",
   }),
   pickupDate: z
     .string()
