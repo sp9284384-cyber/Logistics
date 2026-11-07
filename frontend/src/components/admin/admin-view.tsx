@@ -266,13 +266,6 @@ function LoginView({
     </div>
   );
 }
-            <ArrowLeft className="size-4" /> Back to website
-          </button>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
 
 /* ------------------------- DASHBOARD ------------------------- */
 function DashboardView({
